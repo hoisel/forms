@@ -6,8 +6,17 @@
     "start": "ng serve",
     "build": "ng build",
     "test": "ng test",
-    "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "lint": "ng lint prodest-forms --fix --type-check --format=stylish",
+    "htmlhint": "htmlhint --config .htmlhintrc",
+    "format": "prettier --find-config-path --write",
+    "format:check": "prettier --find-config-path --list-different \"src/**/*{.ts,.js,.json,.css,.scss}\"",
+    "check-updates": "npx npm-check -u",
+    "bundle-report": "webpack-bundle-analyzer dist/stats.json",
+    "release": "standard-version -a",
+    "release:pre": "standard-version -a --release-as patch",
+    "release-as": "standard-version -a --release-as ",
+    "release:preview": "standard-version -a --dry-run"
   },
   "private": true,
   "dependencies": {
@@ -19,6 +28,10 @@
     "@angular/platform-browser": "~8.2.11",
     "@angular/platform-browser-dynamic": "~8.2.11",
     "@angular/router": "~8.2.11",
+    "@datorama/akita": "^4.10.8",
+    "bootstrap": "^4.3.1",
+    "primeicons": "^2.0.0",
+    "primeng": "^8.1.1",
     "rxjs": "~6.4.0",
     "tslib": "^1.10.0",
     "zone.js": "~0.9.1"
@@ -28,10 +41,14 @@
     "@angular/cli": "~8.3.14",
     "@angular/compiler-cli": "~8.2.11",
     "@angular/language-service": "~8.2.11",
-    "@types/node": "~8.9.4",
+    "@commitlint/cli": "^8.2.0",
+    "@commitlint/config-conventional": "^8.2.0",
     "@types/jasmine": "~3.3.8",
     "@types/jasminewd2": "~2.0.3",
+    "@types/node": "~8.9.4",
     "codelyzer": "^5.0.0",
+    "htmlhint": "^0.11.0",
+    "husky": "^3.0.9",
     "jasmine-core": "~3.4.0",
     "jasmine-spec-reporter": "~4.2.1",
     "karma": "~4.1.0",
@@ -39,9 +56,35 @@
     "karma-coverage-istanbul-reporter": "~2.0.1",
     "karma-jasmine": "~2.0.1",
     "karma-jasmine-html-reporter": "^1.4.0",
+    "lint-staged": "^9.4.2",
+    "prettier": "^1.18.2",
     "protractor": "~5.4.0",
+    "standard-version": "^7.0.0",
     "ts-node": "~7.0.0",
     "tslint": "~5.15.0",
-    "typescript": "~3.5.3"
+    "typescript": "~3.5.3",
+    "webpack-bundle-analyzer": "^3.6.0"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged",
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+    }
+  },
+  "lint-staged": {
+    "src/app/**/*.html": [
+      "npm run htmlhint"
+    ],
+    "src/libs/**/*.html": [
+      "npm run htmlhint"
+    ],
+    "src/**/*.ts": [
+      "npm run format",
+      "git add"
+    ],
+    "src/**/*.{css,scss}": [
+      "npm run format",
+      "git add"
+    ]
   }
 }
