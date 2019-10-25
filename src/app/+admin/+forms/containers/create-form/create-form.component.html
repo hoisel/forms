@@ -1,6 +1,6 @@
 <div class="container">
     <div class="d-flex m-4">
-        <div class="card flex-grow-0  w-100 p-4 m-2">
+        <div class="card flex-grow-0 w-100 p-4 m-2">
             <h5>Campos disponíveis</h5>
             <hr>
             <p>Arraste para adicionar ao formulário</p>
@@ -14,7 +14,7 @@
                     (click)="select(field)">
                     <i class="fas fa-expand-arrows-alt"></i>
                     <span>
-                        {{field.item.displayName}}
+                        {{field.item.templateOptions.label}}
                     </span>
                     <i class="fas fa-angle-double-right"></i>
                 </li>
@@ -35,6 +35,7 @@
             <div pDroppable="available"
                  (onDrop)="drop($event)"
                  [ngClass]="{'pDroppable-highlight': !!dragged}">
+
                 <ul class="selected-fields">
                     <li *ngIf="!dragged && !selectedFields?.length; else selectedFieldsTmpl"
                         class="msg empty">
@@ -51,10 +52,11 @@
                             class="shadow-sm selected-field">
                             <span class="order">{{i+1}}</span>
                             <span>
-                                {{field.item.displayName}}
+                                {{field.item.templateOptions.label}}
                             </span>
                             <div class="btns">
-                                <i class="far fa-edit"></i>
+                                <i class="far fa-edit"
+                                   (click)="editField(field)"></i>
                                 <i class="far fa-trash-alt"
                                    (click)="remove(field)"></i>
                             </div>
@@ -64,6 +66,10 @@
             </div>
         </div>
         <div class="card flex-grow-0 w-100 p-4 m-2">
+            <formly-form [form]="form"
+                         [fields]="fields"
+                         [model]="model">
+            </formly-form>
         </div>
     </div>
 </div>
