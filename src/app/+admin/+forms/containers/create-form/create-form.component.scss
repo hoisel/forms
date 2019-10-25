@@ -1,0 +1,143 @@
+@import 'src/theme/framework';
+.card {
+  background: $white;
+  min-height: 300px;
+  @extend .shadow-sm;
+  @extend .rounded;
+
+  h5 {
+    color: $primary;
+  }
+
+  hr {
+    border-top-color: rgba($primary, 0.2);
+  }
+
+  .selected-fields-label {
+    .selected-count {
+      font-weight: bold;
+      font-size: 1.3rem;
+      margin: 0 8px;
+      color: $secondary;
+    }
+
+    i {
+      margin-left: auto;
+      margin-right: 10px;
+      color: $red;
+      font-size: 1.3rem;
+      cursor: pointer;
+    }
+  }
+
+  ul {
+    list-style: none;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    .selected-field {
+      border: 1px solid rgba($secondary, 0.3);
+      background-color: rgba($secondary, 0.03);
+      padding: 10px;
+      margin-bottom: 5px;
+      border-radius: 3px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+
+      &:hover {
+        background: $white;
+        border-color: $secondary;
+        @extend .shadow-none;
+      }
+      .order {
+        font-weight: bold;
+        margin-right: 15px;
+        color: rgba($body-color, 0.5);
+      }
+      .btns {
+        margin-left: auto;
+
+        i {
+          cursor: pointer;
+          margin-right: 6px;
+          padding-right: 6px;
+          &:not(:last-child) {
+            border-right: 1px solid rgba($secondary, 0.2);
+          }
+        }
+      }
+    }
+  }
+
+  .available-fields {
+    [pDraggable] {
+      border: 1px solid rgba($secondary, 0.3);
+      background-color: rgba($secondary, 0.03);
+      padding: 10px;
+      margin-bottom: 5px;
+      border-radius: 3px;
+
+      &.pDraggable-highlight {
+        border-style: dashed;
+        color: rgba($body-color, 0.5);
+        background-color: rgba($secondary, 0.1);
+        i.fa-expand-arrows-alt,
+        i.fa-angle-double-right {
+          display: none;
+        }
+      }
+
+      &:hover {
+        cursor: s-resize;
+        background: $white;
+        @extend .shadow-none;
+      }
+
+      &:hover {
+        cursor: grab;
+      }
+
+      &:active {
+        cursor: grabbing;
+      }
+
+      i.fa-expand-arrows-alt {
+        margin-right: 6px;
+        padding-right: 10px;
+        border-right: 1px solid rgba($secondary, 0.2);
+      }
+
+      i.fa-angle-double-right {
+        float: right;
+        padding: 2px;
+        color: rgba($secondary, 0.5);
+        padding: 3px 10px;
+        // border: 1px solid rgba($secondary, 0.2);
+        border-radius: 3px;
+        &:hover {
+          cursor: pointer;
+        }
+      }
+    }
+  }
+
+  .selected-fields {
+    .msg {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 50px;
+    }
+  }
+
+  [pDroppable] {
+    border: 2px solid transparent;
+    border-radius: 3px;
+    &.pDroppable-highlight {
+      border: 2px dashed $accent;
+    }
+  }
+}

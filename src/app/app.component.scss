@@ -1,0 +1,70 @@
+@import 'src/theme/theme-variables';
+
+a,
+a:visited,
+a:hover {
+  color: $primary-500;
+  text-decoration: none;
+}
+
+a:hover {
+  color: $primary-500;
+}
+
+body,
+html {
+  min-height: 100vh;
+}
+
+.layout-wrapper {
+  .layout-nav {
+    .toolbar {
+      height: 60px;
+      display: flex;
+      align-items: center;
+      color: white;
+      background-color: $primary;
+      // background: linear-gradient(140deg, rgba(60, 112, 164, 1) 0%, rgba(6, 179, 214, 1) 100%);
+      font-weight: 600;
+      img {
+        margin: 0 16px;
+      }
+    }
+    .menu {
+      height: 40px;
+      display: flex;
+      align-items: center;
+      color: white;
+      background-color: $secondary;
+    }
+  }
+
+  .layout-main {
+    .card-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 16px;
+    }
+
+    .circle-link {
+      height: 40px;
+      width: 40px;
+      border-radius: 40px;
+      margin: 8px;
+      background-color: white;
+      border: 1px solid #eeeeee;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+      transition: 1s ease-out;
+    }
+
+    .circle-link:hover {
+      transform: translateY(-0.25rem);
+      box-shadow: 0px 3px 15px rgba(0, 0, 0, 0.2);
+    }
+  }
+}

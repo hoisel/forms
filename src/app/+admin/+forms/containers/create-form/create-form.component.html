@@ -1,0 +1,69 @@
+<div class="container">
+    <div class="d-flex m-4">
+        <div class="card flex-grow-0  w-100 p-4 m-2">
+            <h5>Campos disponíveis</h5>
+            <hr>
+            <p>Arraste para adicionar ao formulário</p>
+            <ul class="available-fields">
+                <li *ngFor="let field of availableFields"
+                    pDraggable="available"
+                    class="shadow-sm"
+                    [ngClass]="{'pDraggable-highlight': dragged?.guid === field.guid}"
+                    (onDragStart)="dragStart($event,field)"
+                    (onDragEnd)="dragEnd($event)"
+                    (click)="select(field)">
+                    <i class="fas fa-expand-arrows-alt"></i>
+                    <span>
+                        {{field.item.displayName}}
+                    </span>
+                    <i class="fas fa-angle-double-right"></i>
+                </li>
+            </ul>
+        </div>
+        <div class="card flex-grow-1 w-100 p-4 m-2">
+            <h5>Formulário</h5>
+            <hr>
+            <p *ngIf="selectedFields?.length"
+               class="d-flex align-items-center selected-fields-label">
+                <span class="selected-count">
+                    {{selectedFields?.length}}
+                </span>
+                campos selecionados para o formulário
+                <i class="far fa-trash-alt"
+                   (click)="removeAll()"></i>
+            </p>
+            <div pDroppable="available"
+                 (onDrop)="drop($event)"
+                 [ngClass]="{'pDroppable-highlight': !!dragged}">
+                <ul class="selected-fields">
+                    <li *ngIf="!dragged && !selectedFields?.length; else selectedFieldsTmpl"
+                        class="msg empty">
+                        <strong>Nenhum campo adicionado</strong>
+                        <p>O formulário ainda está vazio</p>
+                    </li>
+                    <li *ngIf="!!dragged"
+                        class="msg drop-area">
+                        <strong>Arraste para cá</strong>
+                        <p>Arraste o campo e solte nessa área</p>
+                    </li>
+                    <ng-template #selectedFieldsTmpl>
+                        <li *ngFor="let field of selectedFields; let i = index"
+                            class="shadow-sm selected-field">
+                            <span class="order">{{i+1}}</span>
+                            <span>
+                                {{field.item.displayName}}
+                            </span>
+                            <div class="btns">
+                                <i class="far fa-edit"></i>
+                                <i class="far fa-trash-alt"
+                                   (click)="remove(field)"></i>
+                            </div>
+                        </li>
+                    </ng-template>
+                </ul>
+            </div>
+        </div>
+        <div class="card flex-grow-0 w-100 p-4 m-2">
+        </div>
+    </div>
+</div>

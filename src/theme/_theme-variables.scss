@@ -1,0 +1,113 @@
+/* https://colorhunt.co/palette/156759
+*
+*  #d9eeec
+*  #64b2cd 
+*  #3c70a4
+*  #da9833  
+
+*/
+
+:root {
+  --primary-100: hsl(210, 46%, 64%);
+  --primary-200: hsl(210, 46%, 54%);
+  --primary: hsl(210, 46%, 44%);
+  --primary-400: hsl(210, 46%, 34%);
+  --primary-500: hsl(210, 46%, 24%);
+
+  --accent-100: hsl(36, 69%, 73%);
+  --accent-200: hsl(36, 69%, 63%);
+  --accent: hsl(36, 69%, 53%);
+  --accent-400: hsl(36, 69%, 43%);
+  --accent-500: hsl(36, 69%, 33%);
+
+  --shade-100: hsl(195, 51%, 80%);
+  --shade-200: hsl(195, 51%, 70%);
+  --shade: hsl(195, 51%, 60%);
+  --shade-400: hsl(195, 51%, 50%);
+  --shade-500: hsl(195, 51%, 40%);
+  //   --secondary: #01579b;
+  //   --background--1: #e1f5fe;
+  //   --background--2: #b3e5fc;
+  //   --background: #eceff1;
+  //   --background-menu: #455a64;
+  //   --menu-title: #f5f5f5;
+  //   --menu-font: #616161;
+  //   --menu-bg-selected: #eee;
+}
+
+/************************************* Edocs forms variables *************************************/
+
+$primary-100: hsl(210, 46%, 64%);
+$primary-200: hsl(210, 46%, 54%);
+$primary-300: hsl(210, 46%, 44%);
+$primary-400: hsl(210, 46%, 34%);
+$primary-500: hsl(210, 46%, 24%);
+$accent-100: hsl(36, 69%, 73%);
+$accent-200: hsl(36, 69%, 63%);
+$accent-300: hsl(36, 69%, 53%);
+$accent-400: hsl(36, 69%, 43%);
+$accent-500: hsl(36, 69%, 33%);
+
+/************************************* FontAwesome variables *************************************/
+$fa-font-path: '~@fortawesome/fontawesome-free/webfonts';
+
+/************************************* Bootstrap variables *************************************/
+
+// Variables
+//
+// Variables should follow the `$component-state-property-size` formula for
+// consistent naming. Ex: $nav-link-disabled-color and $modal-content-box-shadow-xs.
+
+// Color system
+
+$white: #fff !default;
+$gray-100: #f8f9fa !default;
+$gray-200: #e9ecef !default;
+$gray-300: #dee2e6 !default;
+$gray-400: #ced4da !default;
+$gray-500: #adb5bd !default;
+$gray-600: #6c757d !default;
+$gray-700: #495057 !default;
+$gray-800: #343a40 !default;
+$gray-900: #212529 !default;
+$black: #000 !default;
+
+// colors
+$blue: #007bff !default;
+$indigo: #6610f2 !default;
+$purple: #6f42c1 !default;
+$pink: #e83e8c !default;
+$red: #dc3545 !default;
+$orange: #fd7e14 !default;
+$yellow: #ffc107 !default;
+$green: #28a745 !default;
+$teal: #20c997 !default;
+$cyan: #17a2b8 !default;
+
+// theme colors
+$primary: #64b2cd !default;
+$secondary: #3c70a4 !default;
+$success: $green !default;
+$info: $cyan !default;
+$warning: $yellow !default;
+$danger: $red !default;
+$light: $gray-100 !default;
+$dark: $gray-900 !default;
+$accent: hsl(36, 69%, 53%);
+
+// Body
+//
+// Settings for the `<body>` element.
+
+$body-bg: $gray-200;
+$body-color: #424c52;
+
+// Grid containers
+//
+// Define the maximum width of `.container` for different screen sizes.
+$container-max-widths: (
+  sm: 540px,
+  md: 720px,
+  lg: 960px,
+  xl: 1680px
+) !default;
