@@ -10,6 +10,7 @@ import { FieldWrapper } from '@ngx-formly/core';
           {{ to.label }}
           <span *ngIf="to.required && to.hideRequiredMarker !== true">*</span>
         </label>
+        <div *ngIf="to.tooltip" class="float-right" [pTooltip]="to.tooltip"><i class="far fa-question-circle"></i></div>
       </div>
       <div>
         <ng-container #fieldComponent></ng-container>

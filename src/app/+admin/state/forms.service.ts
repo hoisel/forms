@@ -1,32 +1,75 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { ID } from '@datorama/akita';
+import { arrayAdd, arrayRemove, arrayUpdate, guid, ID } from '@datorama/akita';
+import { FormlyFieldConfig } from '@ngx-formly/core';
 import { tap } from 'rxjs/operators';
 
 import { Form } from './form.model';
 import { FormsStore } from './forms.store';
 
+export const cloneField = (field: FormlyFieldConfig) => ({
+  key: field.key,
+  type: field.type,
+  id: field.id,
+  wrappers: field.wrappers,
+  // ...field,
+  templateOptions: { ...field.templateOptions }
+});
+
 @Injectable({ providedIn: 'root' })
 export class FormsService {
-  constructor(private formsStore: FormsStore, private http: HttpClient) {}
+  constructor(private store: FormsStore, private http: HttpClient) {}
 
   get() {
     return this.http.get<Form[]>('https://api.com').pipe(
       tap(entities => {
-        this.formsStore.set(entities);
+        this.store.set(entities);
       })
     );
   }
 
   add(form: Form) {
-    this.formsStore.add(form);
+    this.store.add(form);
   }
 
   update(id, form: Partial<Form>) {
-    this.formsStore.update(id, form);
+    this.store.update(id, form);
   }
 
   remove(id: ID) {
-    this.formsStore.remove(id);
+    this.store.remove(id);
+  }
+
+  setActive(id: ID) {
+    this.store.setActive(id);
+  }
+
+  addField(id: ID, field: FormlyFieldConfig) {
+    this.store.update(id, entity => ({
+      fields: arrayAdd(entity.fields, {
+        id: guid(),
+        ...field
+      })
+    }));
+  }
+
+  removeField(id: ID, field: FormlyFieldConfig) {
+    this.store.update(id, entity => ({
+      fields: arrayRemove(entity.fields, f => f.id === field.id)
+    }));
+  }
+
+  updateField(id: ID, field: FormlyFieldConfig) {
+    this.store.update(id, entity => ({
+      fields: arrayUpdate(entity.fields, f => f.id === field.id, field)
+    }));
+  }
+
+  removeAllFields(id: ID) {
+    this.update(id, { fields: [] });
+  }
+
+  clearForm(id: ID) {
+    this.update(id, { fields: [], name: '' });
   }
 }

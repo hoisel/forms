@@ -15,7 +15,8 @@ export class InputSwitchField extends FieldType {
   static create(key: string, templateOptions?: InputSwitchTemplateOptions, options?: any): FormlyFieldConfig {
     const defaults = {
       label: 'Sim/Não',
-      icon: 'fa-toggle-on'
+      icon: 'fa-toggle-on',
+      tooltip: ''
     };
 
     return createField('input-switch', key, { ...defaults, ...templateOptions }, options);
@@ -29,6 +30,11 @@ export class InputSwitchField extends FieldType {
       label: 'Label',
       placeholder: 'Label',
       required: true
+    }),
+    TextField.create('tooltip', {
+      label: 'Tooltip',
+      placeholder: '',
+      required: false
     }),
     InputSwitchField.create('required', {
       label: 'Obrigatório?',

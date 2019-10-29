@@ -10,7 +10,8 @@ export class EmailField extends FieldType {
       type: 'email',
       label: 'Email',
       placeholder: 'Digite seu email',
-      icon: 'fa-at'
+      icon: 'fa-at',
+      tooltip: ''
     };
 
     return createField('input', key, { ...defaults, ...templateOptions }, options);
@@ -21,6 +22,16 @@ export class EmailField extends FieldType {
       label: 'Label',
       placeholder: 'Label',
       required: true
+    }),
+    TextField.create('tooltip', {
+      label: 'Tooltip',
+      placeholder: '',
+      required: false
+    }),
+    TextField.create('placeholder', {
+      label: 'Placeholder',
+      placeholder: 'Placeholder',
+      required: false
     }),
     InputSwitchField.create('required', {
       label: 'Obrigatório?',

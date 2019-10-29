@@ -14,18 +14,17 @@ import { InputTextareaModule } from 'primeng/inputtextarea';
 import { PasswordModule } from 'primeng/password';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { SelectButtonModule } from 'primeng/selectbutton';
-import { TableModule } from 'primeng/table';
 import { ToastModule } from 'primeng/toast';
 import { ToggleButtonModule } from 'primeng/togglebutton';
+import { TooltipModule } from 'primeng/tooltip';
 
-import { Directives } from './common';
+import { Components, Directives } from './common';
 import { FormsConfig, FormTypes } from './forms/forms.config';
 
 const Primeng = [
   SelectButtonModule,
   DragDropModule,
   InputSwitchModule,
-  TableModule,
   CalendarModule,
   DynamicDialogModule,
   ToggleButtonModule,
@@ -35,7 +34,8 @@ const Primeng = [
   RadioButtonModule,
   DropdownModule,
   PasswordModule,
-  InputTextareaModule
+  InputTextareaModule,
+  TooltipModule
 ];
 
 const Formly = [FormlyModule, FormlySelectModule];
@@ -50,7 +50,7 @@ const Formly = [FormlyModule, FormlySelectModule];
     FormlyModule.forRoot(),
     FormlyModule.forChild(FormsConfig)
   ],
-  declarations: [...FormTypes, ...Directives],
-  exports: [CommonModule, FormsModule, ReactiveFormsModule, ...Directives, ...Primeng, ...Formly]
+  declarations: [...FormTypes, ...Directives, ...Components],
+  exports: [CommonModule, FormsModule, ReactiveFormsModule, ...Directives, ...Components, ...Primeng, ...Formly]
 })
 export class SharedModule {}

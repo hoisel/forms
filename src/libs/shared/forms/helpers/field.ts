@@ -39,7 +39,9 @@ export type FieldTypeName =
   | 'toggle-button'
   | 'input-switch';
 
-export type TextTemplateOptions = Pick<FormlyTemplateOptions, 'label' | 'placeholder' | 'required' | 'disabled'>;
+export type TextTemplateOptions = Pick<FormlyTemplateOptions, 'label' | 'placeholder' | 'required' | 'disabled'> & {
+  tooltip?: string;
+};
 export type EmailTemplateOptions = TextTemplateOptions;
 export type PasswordTemplateOptions = TextTemplateOptions;
 export type SelectTemplateOptions = TextTemplateOptions;

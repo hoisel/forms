@@ -25,6 +25,8 @@ export class SelectField extends FieldType {
   public static create(key: string, templateOptions?: SelectTemplateOptions, options?: any): FormlyFieldConfig {
     const defaults = {
       options: [],
+      placeholder: 'Selecione...',
+      tooltip: '',
       icon: 'fa-caret-square-down'
     };
     return createField('select', key, { ...defaults, ...templateOptions }, options);
@@ -35,6 +37,16 @@ export class SelectField extends FieldType {
       label: 'Label',
       placeholder: 'Label',
       required: true
+    }),
+    TextField.create('placeholder', {
+      label: 'Placeholder',
+      placeholder: 'Placeholder',
+      required: false
+    }),
+    TextField.create('tooltip', {
+      label: 'Tooltip',
+      placeholder: '',
+      required: false
     }),
     InputSwitchField.create('required', {
       label: 'Obrigatório?',

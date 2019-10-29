@@ -1,109 +1,26 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { FormGroup } from '@angular/forms';
-import {
-  CalendarField,
-  CheckboxField,
-  EmailField,
-  InputSwitchField,
-  PasswordField,
-  RadioField,
-  SelectField,
-  TextareaField,
-  TextField,
-  ToggleButtonField
-} from '@edocsforms/shared';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { FormlyFieldConfig } from '@ngx-formly/core';
 import { DialogService, MessageService } from 'primeng/api';
+import { Observable, Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { Form, FormsQuery, FormsService } from 'src/app/+admin/state';
 
 import { EditFieldComponent } from '../../components';
-
-const cloneField = (field: FormlyFieldConfig) => ({
-  ...field,
-  templateOptions: { ...field.templateOptions }
-});
-
-class SelectableField {
-  guid: symbol;
-  item: FormlyFieldConfig;
-
-  static create(field: FormlyFieldConfig) {
-    return {
-      guid: Symbol(),
-      // !important: deepclone
-      item: cloneField(field)
-    };
-  }
-}
-
-interface Form {
-  name: string;
-  fields: FormlyFieldConfig[];
-}
-
-const mockedFields: FormlyFieldConfig[] = [
-  CalendarField.create('data', {
-    label: 'Data',
-    placeholder: 'Data',
-    required: true,
-    inline: false
-  }),
-  TextField.create('texto', {
-    label: 'Texto',
-    required: true
-  }),
-  EmailField.create('email', {
-    label: 'Email',
-    placeholder: 'Digite seu email',
-    required: true
-  }),
-  ToggleButtonField.create('toggleButton', {
-    label: 'Toggle Button',
-    required: true
-  }),
-  InputSwitchField.create('inputSwitch', {
-    label: 'Input Switch',
-    required: true
-  }),
-  PasswordField.create('password', {
-    label: 'Senha',
-    placeholder: 'Digite sua senha',
-    required: true
-  }),
-  SelectField.create('select', {
-    label: 'Lista',
-    required: true
-  }),
-  TextareaField.create('textarea', {
-    label: 'Textarea',
-    placeholder: 'Textarea',
-    required: true
-  }),
-  RadioField.create('radio', {
-    label: 'Radio Button',
-    required: true
-  }),
-  CheckboxField.create('checkbox', {
-    label: 'Checkbox',
-    required: true
-  })
-];
 
 @Component({
   templateUrl: './create-form.component.html',
   styleUrls: ['./create-form.component.scss'],
   encapsulation: ViewEncapsulation.Emulated,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [DialogService, MessageService]
 })
-export class CreateFormComponent implements OnInit {
-  form = new FormGroup({});
-  model = {};
-  selectedFields: SelectableField[];
-  availableFields: SelectableField[] = mockedFields.map(field => SelectableField.create(field));
-  dragged: SelectableField;
-  get fields(): FormlyFieldConfig[] {
-    return this.selectedFields.map(f => f.item);
-  }
+export class CreateFormComponent implements OnInit, OnDestroy {
+  private destroyed$$ = new Subject();
+  formName = new FormControl('');
+  activeForm$: Observable<Form>;
+  availableFields$: Observable<FormlyFieldConfig[]>;
+  selectedFields$: Observable<FormlyFieldConfig[]>;
+  dragged: FormlyFieldConfig;
 
   selectedMode = '';
   previewModes = [
@@ -118,6 +35,8 @@ export class CreateFormComponent implements OnInit {
   constructor(
     private dialogService: DialogService,
     public messageService: MessageService,
+    private query: FormsQuery,
+    private forms: FormsService,
     private cd: ChangeDetectorRef
   ) {}
 
@@ -125,13 +44,63 @@ export class CreateFormComponent implements OnInit {
    *
    */
   ngOnInit() {
-    this.removeAll();
+    this.availableFields$ = this.query.availableFields$;
+    this.activeForm$ = this.query.activeForm$;
+
+    this.activeForm$.pipe(takeUntil(this.destroyed$$)).subscribe(form => {
+      this.formName.setValue(form.name);
+    });
+
+    const form = {
+      name: '',
+      id: '2ca6ff4394',
+      fields: [
+        {
+          id: 'c5801c4b8a',
+          type: 'input',
+          key: 'texto',
+          templateOptions: {
+            icon: 'fa fa-font',
+            label: 'Nome',
+            required: true,
+            placeholder: 'Digite seu nome...',
+            disabled: false
+          },
+          wrappers: ['form-field'],
+          hooks: {},
+          modelOptions: {}
+        },
+        {
+          id: '97dcb443aa',
+          type: 'input',
+          key: 'email',
+          templateOptions: {
+            type: 'email',
+            label: 'Email do funcionário',
+            placeholder: 'Digite seu email...',
+            icon: 'fa-at',
+            required: true,
+            disabled: false
+          },
+          wrappers: ['form-field']
+        }
+      ]
+    };
+
+    // const form = { name: '', id: guid(), fields: [] };
+    this.forms.add(form);
+    this.forms.setActive(form.id);
+  }
+
+  ngOnDestroy() {
+    this.destroyed$$.next();
+    this.destroyed$$.complete();
   }
 
   /**
    *
    */
-  dragStart(event, field: SelectableField) {
+  dragStart(event, field: FormlyFieldConfig) {
     this.dragged = field;
   }
 
@@ -147,14 +116,7 @@ export class CreateFormComponent implements OnInit {
    */
   drop() {
     if (this.dragged) {
-      const selected = SelectableField.create(this.dragged.item);
-      const alreadySelected = this.selectedFields.find(f => f.item.key === selected.item.key);
-      if (!alreadySelected) {
-        this.selectedFields = [...this.selectedFields, SelectableField.create(this.dragged.item)];
-      } else {
-        this.messageService.add({ severity: 'warn', summary: `Já existe um campo ${selected.item.key}` });
-      }
-
+      this.forms.addField(this.query.getActiveId(), this.dragged);
       this.dragged = null;
     }
   }
@@ -162,7 +124,7 @@ export class CreateFormComponent implements OnInit {
   /**
    *
    */
-  select(field: SelectableField) {
+  select(field: FormlyFieldConfig) {
     this.dragged = field;
     this.drop();
   }
@@ -170,39 +132,34 @@ export class CreateFormComponent implements OnInit {
   /**
    *
    */
-  remove(field: SelectableField) {
-    this.selectedFields = this.selectedFields.filter(f => f.guid !== field.guid);
+  remove(field: FormlyFieldConfig) {
+    this.forms.removeField(this.query.getActiveId(), field);
   }
 
   /**
    *
    */
   removeAll() {
-    this.selectedFields = [];
+    this.forms.removeAllFields(this.query.getActiveId());
   }
 
   /**
    *
    */
-  editField(field: SelectableField) {
-    const label = field.item.templateOptions.label;
+  editField(field: FormlyFieldConfig) {
+    const label = field.templateOptions.label;
 
     const ref = this.dialogService.open(EditFieldComponent, {
       header: `Editar campo ${label}`,
       width: '70%',
-      data: cloneField(field.item),
+      data: field,
       style: { 'max-width': '800px' },
       contentStyle: { 'max-width': '800px', 'min-height': '800px', overflow: 'auto' }
     });
 
     ref.onClose.subscribe((edited: FormlyFieldConfig) => {
       if (edited) {
-        this.replaceField(field.guid, edited);
-
-        if (field.item.key !== edited.key) {
-          this.model = {};
-        }
-
+        this.forms.updateField(this.query.getActiveId(), edited);
         this.messageService.add({ severity: 'info', summary: label, detail: 'Campo atualizado' });
         this.cd.detectChanges();
       }
@@ -210,13 +167,16 @@ export class CreateFormComponent implements OnInit {
   }
 
   /**
-   * Replace item with specified guid with new field config
+   *
    */
-  private replaceField = (guid: symbol, field: FormlyFieldConfig) => {
-    // tslint:disable-next-line:no-shadowed-variable
-    const indexOldElement = this.selectedFields.findIndex(({ guid }) => guid === guid);
-    this.selectedFields = Object.assign([...this.selectedFields], {
-      [indexOldElement]: { guid, item: field }
-    });
+  saveForm = (form: Form) => {
+    console.log(JSON.stringify(this.query.getActive()));
+  };
+
+  /**
+   *
+   */
+  clearForm = (form: Form) => {
+    this.forms.clearForm(form.id);
   };
 }

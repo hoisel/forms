@@ -1,106 +1,131 @@
-<div class="container">
-    <div class="d-flex m-4">
-        <div class="card flex-grow-0 w-100 p-4 m-2">
-            <h5>Campos disponíveis</h5>
-            <hr>
-            <p><strong>Arraste</strong> ou <strong>clique</strong> para adicionar ao formulário</p>
-            <ul class="available-fields">
-                <li *ngFor="let field of availableFields"
-                    pDraggable="available"
-                    class="shadow-sm"
-                    [ngClass]="{'pDraggable-highlight': dragged?.guid === field.guid}"
-                    (onDragStart)="dragStart($event,field)"
-                    (onDragEnd)="dragEnd($event)"
-                    (click)="select(field)">
-                    <field-icon [field]="field.item"></field-icon>
-                    <span>
-                        {{field.item.templateOptions.label}}
-                    </span>
-                    <i class="fas fa-angle-double-right"></i>
-                </li>
-            </ul>
-        </div>
-        <div class="card flex-grow-1 w-100 p-4 m-2">
-            <h5>Formulário</h5>
-            <hr>
-            <p *ngIf="selectedFields?.length"
-               class="d-flex align-items-center selected-fields-label">
-                <span class="selected-count">
-                    {{selectedFields?.length}}
-                </span>
-                campos selecionados para o formulário
-                <i class="far fa-trash-alt"
-                   (click)="removeAll()"></i>
-            </p>
-            <div pDroppable="available"
-                 (onDrop)="drop($event)"
-                 [ngClass]="{'pDroppable-highlight': !!dragged}">
-
-                <ul class="selected-fields">
-                    <li *ngIf="!dragged && !selectedFields?.length; else selectedFieldsTmpl"
-                        class="msg empty">
-                        <strong>Nenhum campo adicionado</strong>
-                        <p>O formulário ainda está vazio</p>
+<ng-container *ngIf="(activeForm$ | async) as activeForm">
+    <div class="container">
+        <div class="d-flex m-4">
+            <div class="card flex-grow-0 w-100 p-4 m-2">
+                <h5>Campos disponíveis</h5>
+                <hr>
+                <p><strong>Arraste</strong> ou <strong>clique</strong> para adicionar ao formulário</p>
+                <ul class="available-fields">
+                    <li *ngFor="let field of availableFields$ | async"
+                        pDraggable="available"
+                        class="shadow-sm"
+                        [ngClass]="{'pDraggable-highlight': dragged?.id === field.id}"
+                        (onDragStart)="dragStart($event,field)"
+                        (onDragEnd)="dragEnd($event)"
+                        (click)="select(field)">
+                        <field-icon [field]="field"></field-icon>
+                        <span>
+                            {{field.templateOptions.label}}
+                        </span>
+                        <i class="fas fa-angle-double-right"></i>
                     </li>
-                    <li *ngIf="!!dragged"
-                        class="msg drop-area">
-                        <strong>Arraste para cá</strong>
-                        <p>Arraste o campo e solte nessa área</p>
-                    </li>
-                    <ng-template #selectedFieldsTmpl>
-                        <li *ngFor="let field of selectedFields; let i = index"
-                            class="shadow-sm selected-field">
-                            <span class="order">{{i+1}}</span>
-                            <field-icon [field]="field.item"></field-icon>
-                            <span>
-                                {{field.item.templateOptions.label || field.item.templateOptions.placeholder }}
-                            </span>
-                            <div class="btns">
-                                <i class="far fa-edit"
-                                   (click)="editField(field)"></i>
-                                <i class="far fa-trash-alt"
-                                   (click)="remove(field)"></i>
-                            </div>
-                        </li>
-                    </ng-template>
                 </ul>
+            </div>
+            <div *ngIf="activeForm"
+                 class="card flex-grow-1 w-100 p-4 m-2">
 
-                <!-- <pre>
+                <editable>
+                    <ng-template viewMode>
+                        <h5> {{formName.value || 'Formulário'}} <i class="fas fa-pen"></i></h5>
+                    </ng-template>
+                    <ng-template editMode>
+                        <input type="text"
+                               pInputText
+                               [formControl]="formName"
+                               focusable
+                               editableOnEnter />
+                    </ng-template>
+                </editable>
+                <hr>
+
+                <p *ngIf="activeForm.fields?.length"
+                   class="d-flex align-items-center selected-fields-label">
+                    <span class="selected-count">
+                        {{activeForm.fields?.length}}
+                    </span>
+                    campos selecionados para o formulário
+                    <i class="far fa-trash-alt"
+                       (click)="removeAll()"></i>
+                </p>
+                <div pDroppable="available"
+                     (onDrop)="drop($event)"
+                     [ngClass]="{'pDroppable-highlight': !!dragged}">
+
+                    <ul class="selected-fields">
+                        <li *ngIf="!dragged && !activeForm.fields?.length; else selectedFieldsTmpl"
+                            class="msg empty">
+                            <strong>Nenhum campo adicionado</strong>
+                            <p>O formulário ainda está vazio</p>
+                        </li>
+                        <li *ngIf="!!dragged"
+                            class="msg drop-area">
+                            <strong>Arraste para cá</strong>
+                            <p>Arraste o campo e solte nessa área</p>
+                        </li>
+                        <ng-template #selectedFieldsTmpl>
+                            <li *ngFor="let field of activeForm.fields; let i = index"
+                                class="shadow-sm selected-field">
+                                <span class="order">{{i+1}}</span>
+                                <field-icon [field]="field"></field-icon>
+                                <span>
+                                    {{field.templateOptions.label || field.templateOptions.placeholder }}
+                                </span>
+                                <div class="btns">
+                                    <i class="far fa-edit"
+                                       (click)="editField(field)"></i>
+                                    <i class="far fa-trash-alt"
+                                       (click)="remove(field)"></i>
+                                </div>
+                            </li>
+                        </ng-template>
+                    </ul>
+
+                    <ng-container *ngIf="activeForm.fields?.length || formName.value">
+                        <hr>
+                        <p-button type="button"
+                                  label="Limpar"
+                                  icon="pi pi-check"
+                                  iconPos="left"
+                                  class="float-right ml-2"
+                                  (click)="clearForm(activeForm)"></p-button>
+
+                        <p-button *ngIf="activeForm.fields?.length"
+                                  type="button"
+                                  label="Salvar"
+                                  icon="pi pi-check"
+                                  iconPos="left"
+                                  class="float-right"
+                                  (click)="saveForm(activeForm)"></p-button>
+                    </ng-container>
+
+
+
+                    <!-- <pre>
                     {{selectedFields | json}}
                 </pre> -->
+                </div>
             </div>
-        </div>
-        <div class="card flex-grow-0 w-100 p-4 m-2">
-            <div class="d-flex">
-                <h5>Preview</h5>
-                <p-selectButton *ngIf="selectedFields.length"
-                                [options]="previewModes"
-                                [(ngModel)]="selectedMode"
-                                class="ml-auto"></p-selectButton>
-            </div>
-
-            <hr>
-            <div *ngIf="!selectedFields?.length; else previewTmpl"
-                 class="msg empty">
-                <strong>Nenhum campo adicionado</strong>
-                <p>Adicione campos para visualizar o formulario</p>
-            </div>
-
-            <ng-template #previewTmpl>
-                <form [formGroup]="form">
-                    <formly-form [model]="model"
-                                 [fields]="fields"
-                                 [form]="form"
-                                 class="{{selectedMode}}"></formly-form>
-                </form>
-            </ng-template>
-            <!-- <pre>
-                {{model|json}}
+            <div *ngIf="activeForm"
+                 class="card flex-grow-0 w-100 p-4 m-2">
+                <div class="d-flex">
+                    <h5>Preview</h5>
+                    <p-selectButton *ngIf="activeForm.fields?.length"
+                                    [options]="previewModes"
+                                    [(ngModel)]="selectedMode"
+                                    class="ml-auto"></p-selectButton>
+                </div>
                 <hr>
-                {{form.value|json}}
+                <div *ngIf="!activeForm.fields?.length;"
+                     class="msg empty">
+                    <strong>Nenhum campo adicionado</strong>
+                    <p>Adicione campos para visualizar o formulario</p>
+                </div>
 
-            </pre> -->
+                <formly-form [fields]="activeForm.fields"
+                             class="{{selectedMode}}"></formly-form>
+
+            </div>
         </div>
     </div>
-</div>
+</ng-container>
 <p-toast></p-toast>

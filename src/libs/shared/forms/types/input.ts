@@ -34,6 +34,16 @@ export class InputField extends FieldType {
       placeholder: 'Label',
       required: true
     }),
+    TextField.create('placeholder', {
+      label: 'Placeholder',
+      placeholder: 'Placeholder',
+      required: false
+    }),
+    TextField.create('tooltip', {
+      label: 'Tooltip',
+      placeholder: '',
+      required: false
+    }),
     InputSwitchField.create('required', {
       label: 'Obrigatório?',
       placeholder: 'Obrigatório?',

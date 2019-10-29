@@ -24,8 +24,8 @@ import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/api';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EditFieldComponent implements OnInit {
-  form = new FormGroup({});
   model = {};
+  form = new FormGroup({});
   fields: FormlyFieldConfig[];
 
   /**
@@ -37,16 +37,13 @@ export class EditFieldComponent implements OnInit {
    *
    */
   ngOnInit() {
-    // console.log(f);
-    // this.fields = [...this.createFields(this.config.data.type)];
-    // this.model = this.config.data.templateOptions;
-
     this.model = this.config.data;
     this.fields = [
       {
         ...TextField.create('key', {
           label: 'Name',
           placeholder: 'name',
+          tooltip: 'Nome do campo que será submetido no formulário',
           required: true
         }),
         className: 'name-field'

@@ -42,6 +42,7 @@ export class CalendarField extends FieldType {
       showIcon: true,
       inline: false,
       locale: ptBR,
+      tooltip: '',
       icon: 'fa-calendar-alt'
     };
     return createField('calendar', key, { ...defaults, ...templateOptions }, options);
@@ -59,7 +60,12 @@ export class CalendarField extends FieldType {
     TextField.create('placeholder', {
       label: 'Placeholder',
       placeholder: 'Placeholder',
-      required: true
+      required: false
+    }),
+    TextField.create('tooltip', {
+      label: 'Tooltip',
+      placeholder: '',
+      required: false
     }),
     TextField.create('yearRange', {
       label: 'Intervalo de anos',

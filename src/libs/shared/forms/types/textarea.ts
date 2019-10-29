@@ -9,6 +9,7 @@ import { TextField } from './text';
   selector: 'formly-field-primeng-textarea',
   template: `
     <textarea
+      [placeholder]="to.placeholder"
       [class.ng-dirty]="showError"
       [formControl]="formControl"
       [formlyAttributes]="field"
@@ -23,6 +24,8 @@ export class TextareaField extends FieldType {
     const defaults = {
       rows: 3,
       autoResize: false,
+      placeholder: '',
+      tooltip: '',
       icon: 'fa fa-align-left'
     };
     return createField('textarea', key, { ...defaults, ...templateOptions }, options);
@@ -36,6 +39,16 @@ export class TextareaField extends FieldType {
       label: 'Label',
       placeholder: 'Label',
       required: true
+    }),
+    TextField.create('placeholder', {
+      label: 'Placeholder',
+      placeholder: '',
+      required: false
+    }),
+    TextField.create('tooltip', {
+      label: 'Tooltip',
+      placeholder: '',
+      required: false
     }),
     InputSwitchField.create('autoResize', {
       label: 'Auto redimensionável?',

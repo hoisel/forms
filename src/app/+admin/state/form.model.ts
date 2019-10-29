@@ -1,11 +1,10 @@
 import { ID } from '@datorama/akita';
-
-export interface SetorField {}
-export interface DateField {}
-export interface ApproveField {}
+import { FormlyFieldConfig } from '@ngx-formly/core';
 
 export interface Form {
   id: ID;
+  name: string;
+  fields: FormlyFieldConfig[];
 }
 
 /**

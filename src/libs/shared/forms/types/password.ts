@@ -33,7 +33,7 @@ export class PasswordField extends FieldType {
       placeholder: 'Digite sua senha',
       minLength: 3,
       required: true,
-
+      tooltip: '',
       icon: 'fa fa-lock',
 
       // primebg
@@ -60,7 +60,12 @@ export class PasswordField extends FieldType {
     TextField.create('placeholder', {
       label: 'Placeholder',
       placeholder: 'Placeholder',
-      required: true
+      required: false
+    }),
+    TextField.create('tooltip', {
+      label: 'Tooltip',
+      placeholder: '',
+      required: false
     }),
     TextField.create('weakLabel', {
       label: 'Senha fraca (label)',

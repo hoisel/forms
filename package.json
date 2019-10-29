@@ -46,6 +46,7 @@
     "@angular/language-service": "~8.2.11",
     "@commitlint/cli": "^8.2.0",
     "@commitlint/config-conventional": "^8.2.0",
+    "@datorama/akita-ngdevtools": "^3.0.2",
     "@fortawesome/fontawesome-free": "^5.11.2",
     "@types/jasmine": "~3.3.8",
     "@types/jasminewd2": "~2.0.3",
