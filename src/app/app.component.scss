@@ -68,3 +68,50 @@ html {
     }
   }
 }
+
+::ng-deep formly-form,
+::ng-deep formly-group {
+  display: flex;
+  flex-wrap: wrap;
+
+  formly-field {
+    flex: 1;
+    min-width: 100%;
+    formly-wrapper-primeng-form-field {
+      display: block;
+
+      label {
+        margin-bottom: 5px !important;
+      }
+
+      input {
+        width: 100%;
+      }
+
+      p-calendar {
+        border: none !important;
+        display: block !important;
+        padding: 0 !important;
+        .ui-calendar {
+          display: flex;
+        }
+      }
+    }
+  }
+
+  &.md {
+    formly-field {
+      min-width: 50%;
+    }
+  }
+  &.lg {
+    formly-field {
+      min-width: 33%;
+    }
+  }
+  &.xl {
+    formly-field {
+      min-width: 25%;
+    }
+  }
+}

@@ -1,1 +1,17 @@
-<p>edit-field works!</p>
+<form *ngIf="fields"
+      [formGroup]="form"
+      (ngSubmit)="submit()">
+    <formly-form [model]="model"
+                 [fields]="fields"
+                 [form]="form"
+                 class="lg"></formly-form>
+    <hr>
+    <p-button type="submit"
+              label="Salvar"
+              icon="pi pi-check"
+              iconPos="left"
+              class="float-right"></p-button>
+</form>
+<!-- <pre>
+{{form.value|json}}
+</pre> -->

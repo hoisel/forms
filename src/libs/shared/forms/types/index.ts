@@ -1,1 +1,11 @@
-export { FormlyFieldCalendar } from './calendar';
+export { CalendarField } from './calendar';
+export { InputSwitchField } from './input-switch';
+export { ToggleButtonField } from './toggle-button';
+export { EmailField } from './email';
+export { CheckboxField } from './checkbox';
+export { PasswordField } from './password';
+export { RadioField } from './radio';
+export { TextareaField } from './textarea';
+export { TextField } from './text';
+export { InputField } from './input';
+export { SelectField } from './select';

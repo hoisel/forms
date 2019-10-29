@@ -1,108 +1,91 @@
-import { ChangeDetectionStrategy, Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { FormlyFieldConfig, FormlyTemplateOptions } from '@ngx-formly/core';
+import {
+  CalendarField,
+  CheckboxField,
+  EmailField,
+  InputSwitchField,
+  PasswordField,
+  RadioField,
+  SelectField,
+  TextareaField,
+  TextField,
+  ToggleButtonField
+} from '@edocsforms/shared';
+import { FormlyFieldConfig } from '@ngx-formly/core';
 import { DialogService, MessageService } from 'primeng/api';
 
 import { EditFieldComponent } from '../../components';
 
-// interface InputFsield {
-//   id: number;
-//   displayName: string;
-// }
+const cloneField = (field: FormlyFieldConfig) => ({
+  ...field,
+  templateOptions: { ...field.templateOptions }
+});
 
-class SelectableItem<T> {
+class SelectableField {
   guid: symbol;
-  item: T;
+  item: FormlyFieldConfig;
 
-  static create<T>(item: T) {
+  static create(field: FormlyFieldConfig) {
     return {
       guid: Symbol(),
-      item
+      // !important: deepclone
+      item: cloneField(field)
     };
   }
 }
 
-type FieldType = 'calendar' | 'setor' | 'approval' | 'input' | 'textarea' | 'select' | 'checkbox' | 'radio';
-
-abstract class BaseField {
-  type: FieldType;
+interface Form {
+  name: string;
+  fields: FormlyFieldConfig[];
 }
 
-class CalendarField extends BaseField {
-  type: 'calendar';
-  key: string;
-  templateOptions: Pick<FormlyTemplateOptions, 'label' | 'placeholder' | 'required'>;
-}
-
-class InputField extends BaseField {
-  type: 'input';
-  key: string;
-  templateOptions: Pick<FormlyTemplateOptions, 'label' | 'placeholder' | 'required'>;
-}
-
-class TextareaField extends BaseField {
-  type: 'textarea';
-  key: string;
-  templateOptions: FormlyTemplateOptions;
-}
-
-class SelectField extends BaseField {
-  type: 'select';
-  key: string;
-  templateOptions: FormlyTemplateOptions;
-}
-
-class CheckboxField extends BaseField {
-  type: 'checkbox';
-  key: string;
-  templateOptions: FormlyTemplateOptions;
-}
-
-class RadioField extends BaseField {
-  type: 'radio';
-  key: string;
-  templateOptions: FormlyTemplateOptions;
-}
-
-type FormField = CalendarField | InputField | TextareaField | SelectField | CheckboxField | RadioField;
-
-const mockedFields: FormField[] = [
-  {
-    key: 'acceptDate',
-    type: 'calendar',
-    templateOptions: {
-      label: 'Data',
-      placeholder: 'Data de aceite',
-      required: true
-    }
-  },
-  {
-    key: 'name',
-    type: 'input',
-    templateOptions: {
-      label: 'Nome',
-      placeholder: 'Digite seu nome',
-      required: true
-    }
-  },
-  {
-    key: 'description',
-    type: 'textarea',
-    templateOptions: {
-      label: 'Textarea',
-      placeholder: 'Descrição',
-      required: true
-    }
-  },
-  {
-    key: 'confirm',
-    type: 'radio',
-    templateOptions: {
-      label: 'Radio button',
-      placeholder: 'Descrição',
-      required: true
-    }
-  }
+const mockedFields: FormlyFieldConfig[] = [
+  CalendarField.create('data', {
+    label: 'Data',
+    placeholder: 'Data',
+    required: true,
+    inline: false
+  }),
+  TextField.create('texto', {
+    label: 'Texto',
+    required: true
+  }),
+  EmailField.create('email', {
+    label: 'Email',
+    placeholder: 'Digite seu email',
+    required: true
+  }),
+  ToggleButtonField.create('toggleButton', {
+    label: 'Toggle Button',
+    required: true
+  }),
+  InputSwitchField.create('inputSwitch', {
+    label: 'Input Switch',
+    required: true
+  }),
+  PasswordField.create('password', {
+    label: 'Senha',
+    placeholder: 'Digite sua senha',
+    required: true
+  }),
+  SelectField.create('select', {
+    label: 'Lista',
+    required: true
+  }),
+  TextareaField.create('textarea', {
+    label: 'Textarea',
+    placeholder: 'Textarea',
+    required: true
+  }),
+  RadioField.create('radio', {
+    label: 'Radio Button',
+    required: true
+  }),
+  CheckboxField.create('checkbox', {
+    label: 'Checkbox',
+    required: true
+  })
 ];
 
 @Component({
@@ -114,18 +97,29 @@ const mockedFields: FormField[] = [
 })
 export class CreateFormComponent implements OnInit {
   form = new FormGroup({});
-  model: Date;
-  selectedFields: SelectableItem<FormField>[];
-  availableFields: SelectableItem<FormField>[] = mockedFields.map(field => SelectableItem.create(field));
-  dragged: SelectableItem<FormField>;
-  get fields(): FormField[] {
+  model = {};
+  selectedFields: SelectableField[];
+  availableFields: SelectableField[] = mockedFields.map(field => SelectableField.create(field));
+  dragged: SelectableField;
+  get fields(): FormlyFieldConfig[] {
     return this.selectedFields.map(f => f.item);
   }
+
+  selectedMode = '';
+  previewModes = [
+    { value: '', title: '1 coluna', icon: 'fas fa-fw fa-stop' },
+    { value: 'md', title: '2 colunas', icon: 'fas fa-fw fa-th-large' },
+    { value: 'lg', title: '3 colunas', icon: 'fas fa-fw fa-th' }
+  ];
 
   /**
    *
    */
-  constructor(private dialogService: DialogService, public messageService: MessageService) {}
+  constructor(
+    private dialogService: DialogService,
+    public messageService: MessageService,
+    private cd: ChangeDetectorRef
+  ) {}
 
   /**
    *
@@ -137,7 +131,7 @@ export class CreateFormComponent implements OnInit {
   /**
    *
    */
-  dragStart(event, field: SelectableItem<FormField>) {
+  dragStart(event, field: SelectableField) {
     this.dragged = field;
   }
 
@@ -153,7 +147,14 @@ export class CreateFormComponent implements OnInit {
    */
   drop() {
     if (this.dragged) {
-      this.selectedFields = [...this.selectedFields, SelectableItem.create(this.dragged.item)];
+      const selected = SelectableField.create(this.dragged.item);
+      const alreadySelected = this.selectedFields.find(f => f.item.key === selected.item.key);
+      if (!alreadySelected) {
+        this.selectedFields = [...this.selectedFields, SelectableField.create(this.dragged.item)];
+      } else {
+        this.messageService.add({ severity: 'warn', summary: `Já existe um campo ${selected.item.key}` });
+      }
+
       this.dragged = null;
     }
   }
@@ -161,7 +162,7 @@ export class CreateFormComponent implements OnInit {
   /**
    *
    */
-  select(field: SelectableItem<FormField>) {
+  select(field: SelectableField) {
     this.dragged = field;
     this.drop();
   }
@@ -169,7 +170,7 @@ export class CreateFormComponent implements OnInit {
   /**
    *
    */
-  remove(field: SelectableItem<FormlyFieldConfig>) {
+  remove(field: SelectableField) {
     this.selectedFields = this.selectedFields.filter(f => f.guid !== field.guid);
   }
 
@@ -183,21 +184,39 @@ export class CreateFormComponent implements OnInit {
   /**
    *
    */
-  editField(field: SelectableItem<FormlyFieldConfig>) {
+  editField(field: SelectableField) {
     const label = field.item.templateOptions.label;
 
     const ref = this.dialogService.open(EditFieldComponent, {
-      header: `Editar ${label}`,
+      header: `Editar campo ${label}`,
       width: '70%',
-      data: field.item,
+      data: cloneField(field.item),
       style: { 'max-width': '800px' },
-      contentStyle: { 'max-width': '800px', overflow: 'auto' }
+      contentStyle: { 'max-width': '800px', 'min-height': '800px', overflow: 'auto' }
     });
 
     ref.onClose.subscribe((edited: FormlyFieldConfig) => {
       if (edited) {
+        this.replaceField(field.guid, edited);
+
+        if (field.item.key !== edited.key) {
+          this.model = {};
+        }
+
         this.messageService.add({ severity: 'info', summary: label, detail: 'Campo atualizado' });
+        this.cd.detectChanges();
       }
     });
   }
+
+  /**
+   * Replace item with specified guid with new field config
+   */
+  private replaceField = (guid: symbol, field: FormlyFieldConfig) => {
+    // tslint:disable-next-line:no-shadowed-variable
+    const indexOldElement = this.selectedFields.findIndex(({ guid }) => guid === guid);
+    this.selectedFields = Object.assign([...this.selectedFields], {
+      [indexOldElement]: { guid, item: field }
+    });
+  };
 }

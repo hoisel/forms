@@ -1,0 +1,45 @@
+@import 'src/theme/theme-variables';
+
+body .ui-button {
+  background-color: $secondary;
+  border-color: $secondary;
+}
+
+body .ui-inputswitch.ui-inputswitch-checked .ui-inputswitch-slider {
+  background-color: $secondary;
+}
+
+body input {
+  font-size: 14px;
+  background: #fff;
+  padding: 0.429em;
+  appearance: none;
+  border: 1px solid rgba($secondary, 0.3);
+  color: $body-color;
+  border-radius: 3px;
+}
+
+body input[pinputtext] {
+  @extend input;
+}
+
+body .ui-inputtext {
+  @extend input;
+}
+
+body .ui-dropdown {
+  @extend input;
+  width: 100%;
+  padding: inherit;
+}
+
+body textarea {
+  @extend input;
+  width: 100%;
+}
+
+body .ui-state-active {
+  background-color: $secondary !important;
+  border-color: $secondary !important;
+  color: #ffffff;
+}

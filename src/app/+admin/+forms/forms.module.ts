@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { SharedModule } from '@edocsforms/shared';
 
@@ -7,7 +6,7 @@ import { CreateFormComponent } from './containers/create-form/create-form.compon
 import { FormsRoutingModule } from './forms-routing.module';
 
 @NgModule({
-  imports: [FormsRoutingModule, CommonModule, SharedModule],
+  imports: [SharedModule, FormsRoutingModule],
   declarations: [CreateFormComponent, ...Components],
   entryComponents: [EditFieldComponent]
 })

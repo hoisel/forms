@@ -3,7 +3,7 @@
         <div class="card flex-grow-0 w-100 p-4 m-2">
             <h5>Campos disponíveis</h5>
             <hr>
-            <p>Arraste para adicionar ao formulário</p>
+            <p><strong>Arraste</strong> ou <strong>clique</strong> para adicionar ao formulário</p>
             <ul class="available-fields">
                 <li *ngFor="let field of availableFields"
                     pDraggable="available"
@@ -12,7 +12,7 @@
                     (onDragStart)="dragStart($event,field)"
                     (onDragEnd)="dragEnd($event)"
                     (click)="select(field)">
-                    <i class="fas fa-expand-arrows-alt"></i>
+                    <field-icon [field]="field.item"></field-icon>
                     <span>
                         {{field.item.templateOptions.label}}
                     </span>
@@ -51,8 +51,9 @@
                         <li *ngFor="let field of selectedFields; let i = index"
                             class="shadow-sm selected-field">
                             <span class="order">{{i+1}}</span>
+                            <field-icon [field]="field.item"></field-icon>
                             <span>
-                                {{field.item.templateOptions.label}}
+                                {{field.item.templateOptions.label || field.item.templateOptions.placeholder }}
                             </span>
                             <div class="btns">
                                 <i class="far fa-edit"
@@ -63,13 +64,43 @@
                         </li>
                     </ng-template>
                 </ul>
+
+                <!-- <pre>
+                    {{selectedFields | json}}
+                </pre> -->
             </div>
         </div>
         <div class="card flex-grow-0 w-100 p-4 m-2">
-            <formly-form [form]="form"
-                         [fields]="fields"
-                         [model]="model">
-            </formly-form>
+            <div class="d-flex">
+                <h5>Preview</h5>
+                <p-selectButton *ngIf="selectedFields.length"
+                                [options]="previewModes"
+                                [(ngModel)]="selectedMode"
+                                class="ml-auto"></p-selectButton>
+            </div>
+
+            <hr>
+            <div *ngIf="!selectedFields?.length; else previewTmpl"
+                 class="msg empty">
+                <strong>Nenhum campo adicionado</strong>
+                <p>Adicione campos para visualizar o formulario</p>
+            </div>
+
+            <ng-template #previewTmpl>
+                <form [formGroup]="form">
+                    <formly-form [model]="model"
+                                 [fields]="fields"
+                                 [form]="form"
+                                 class="{{selectedMode}}"></formly-form>
+                </form>
+            </ng-template>
+            <!-- <pre>
+                {{model|json}}
+                <hr>
+                {{form.value|json}}
+
+            </pre> -->
         </div>
     </div>
 </div>
+<p-toast></p-toast>
