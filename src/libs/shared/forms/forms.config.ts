@@ -8,6 +8,7 @@ import {
   PasswordField,
   RadioField,
   SelectField,
+  SetorField,
   TextareaField,
   ToggleButtonField
 } from './types';
@@ -24,7 +25,7 @@ export const FormTypes = [
   TextareaField,
   ToggleButtonField,
   PasswordField,
-
+  SetorField,
   // wrappers
   FormlyWrapperFormField
 ];
@@ -75,6 +76,11 @@ export const FormsConfig: ConfigOption = {
     {
       name: 'select',
       component: SelectField,
+      wrappers: ['form-field']
+    },
+    {
+      name: 'setor',
+      component: SetorField,
       wrappers: ['form-field']
     }
   ]

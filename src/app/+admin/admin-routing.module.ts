@@ -8,8 +8,8 @@ const routes: Routes = [
     path: '',
     component: AdminComponent,
     children: [
-      { path: '', redirectTo: 'forms' },
-      { path: 'forms', loadChildren: () => import('./+forms/forms.module').then(m => m.FormsModule) }
+      { path: '', redirectTo: 'formularios' },
+      { path: 'formularios', loadChildren: () => import('./+forms/forms.module').then(m => m.FormsModule) }
     ]
   }
 ];

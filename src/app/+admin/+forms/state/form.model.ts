@@ -4,6 +4,7 @@ import { FormlyFieldConfig } from '@ngx-formly/core';
 export interface Form {
   id: ID;
   name: string;
+  published: boolean;
   fields: FormlyFieldConfig[];
 }
 

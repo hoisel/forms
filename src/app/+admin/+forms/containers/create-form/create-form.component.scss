@@ -1,4 +1,5 @@
 @import 'src/theme/framework';
+
 .card {
   background: $white;
   min-height: 300px;
@@ -7,6 +8,10 @@
 
   h5 {
     color: $primary;
+
+    &.form-name {
+      color: $secondary;
+    }
   }
 
   hr {

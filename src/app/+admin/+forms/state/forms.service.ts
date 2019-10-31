@@ -5,6 +5,7 @@ import { FormlyFieldConfig } from '@ngx-formly/core';
 import { tap } from 'rxjs/operators';
 
 import { Form } from './form.model';
+import { FormsQuery } from './forms.query';
 import { FormsStore } from './forms.store';
 
 export const cloneField = (field: FormlyFieldConfig) => ({
@@ -18,7 +19,10 @@ export const cloneField = (field: FormlyFieldConfig) => ({
 
 @Injectable({ providedIn: 'root' })
 export class FormsService {
-  constructor(private store: FormsStore, private http: HttpClient) {}
+  /**
+   *
+   */
+  constructor(private query: FormsQuery, private store: FormsStore, private http: HttpClient) {}
 
   get() {
     return this.http.get<Form[]>('https://api.com').pipe(
@@ -71,5 +75,25 @@ export class FormsService {
 
   clearForm(id: ID) {
     this.update(id, { fields: [], name: '' });
+  }
+
+  deleteForm(id: ID) {
+    this.remove(id);
+  }
+
+  publishForm(id: ID) {
+    this.update(id, { published: true });
+  }
+
+  cloneForm(id: ID) {
+    const toCopy = this.query.getEntity(id);
+    this.add({
+      ...toCopy,
+      ...{
+        id: guid(),
+        published: false,
+        name: `Cópia de ${toCopy.name}`
+      }
+    });
   }
 }

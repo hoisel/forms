@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { QueryEntity } from '@datorama/akita';
-import { filter, map } from 'rxjs/operators';
+import { filterNil, QueryEntity } from '@datorama/akita';
+import { map } from 'rxjs/operators';
 
 import { cloneField } from './forms.service';
 import { FormsState, FormsStore } from './forms.store';
@@ -11,7 +11,7 @@ export class FormsQuery extends QueryEntity<FormsState> {
 
   // TODO !important: sem clona não funciona, nã sei pq
   activeForm$ = this.selectActive().pipe(
-    filter(f => !!f),
+    filterNil,
     map(f => ({ ...f, fields: f.fields.map(cloneField) }))
   );
 

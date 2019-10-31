@@ -1,0 +1,57 @@
+@import 'src/theme/framework';
+
+.fab-btn {
+  position: fixed;
+  bottom: 30px;
+  right: 50px;
+  z-index: 9999;
+  font-size: 30px;
+  background: $primary;
+  color: #fff;
+  &:hover {
+    cursor: pointer;
+    transform: scale(1.03);
+  }
+}
+
+::ng-deep p-toolbar {
+  .ui-toolbar {
+    background-color: transparent;
+    border: none;
+    border-bottom: 1px solid #c4d4e3;
+    padding: 0.571em 1em;
+    border-radius: 0 !important;
+    padding-bottom: 20px;
+    .ui-toolbar-group-left,
+    .ui-toolbar-group-right {
+      display: flex;
+      align-items: center;
+
+      * {
+        margin-right: 0.4rem;
+      }
+
+      input {
+        min-width: 500px;
+      }
+    }
+  }
+}
+
+.cards {
+  display: grid;
+  grid-gap: 16px;
+  grid-template-columns: 25% 25% 25% 25%;
+  .card {
+    padding: 0 0.5rem 1rem;
+    transition: all 0.15s ease-out;
+    &:hover {
+      cursor: pointer;
+      transform: scale(1.03);
+    }
+
+    .card-link {
+      font-size: 1.3rem;
+    }
+  }
+}

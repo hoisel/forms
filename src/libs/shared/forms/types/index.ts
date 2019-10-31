@@ -9,3 +9,4 @@ export { TextareaField } from './textarea';
 export { TextField } from './text';
 export { InputField } from './input';
 export { SelectField } from './select';
+export { SetorField } from './setor';

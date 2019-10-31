@@ -4,15 +4,14 @@ import { FormlyFieldConfig } from '@ngx-formly/core';
 import { DialogService, MessageService } from 'primeng/api';
 import { Observable, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { Form, FormsQuery, FormsService } from 'src/app/+admin/state';
 
 import { EditFieldComponent } from '../../components';
+import { Form, FormsQuery, FormsService } from '../../state';
 
 @Component({
   templateUrl: './create-form.component.html',
   styleUrls: ['./create-form.component.scss'],
-  encapsulation: ViewEncapsulation.Emulated,
-  providers: [DialogService, MessageService]
+  encapsulation: ViewEncapsulation.Emulated
 })
 export class CreateFormComponent implements OnInit, OnDestroy {
   private destroyed$$ = new Subject();
@@ -21,7 +20,6 @@ export class CreateFormComponent implements OnInit, OnDestroy {
   availableFields$: Observable<FormlyFieldConfig[]>;
   selectedFields$: Observable<FormlyFieldConfig[]>;
   dragged: FormlyFieldConfig;
-
   selectedMode = '';
   previewModes = [
     { value: '', title: '1 coluna', icon: 'fas fa-fw fa-stop' },
@@ -50,46 +48,6 @@ export class CreateFormComponent implements OnInit, OnDestroy {
     this.activeForm$.pipe(takeUntil(this.destroyed$$)).subscribe(form => {
       this.formName.setValue(form.name);
     });
-
-    const form = {
-      name: '',
-      id: '2ca6ff4394',
-      fields: [
-        {
-          id: 'c5801c4b8a',
-          type: 'input',
-          key: 'texto',
-          templateOptions: {
-            icon: 'fa fa-font',
-            label: 'Nome',
-            required: true,
-            placeholder: 'Digite seu nome...',
-            disabled: false
-          },
-          wrappers: ['form-field'],
-          hooks: {},
-          modelOptions: {}
-        },
-        {
-          id: '97dcb443aa',
-          type: 'input',
-          key: 'email',
-          templateOptions: {
-            type: 'email',
-            label: 'Email do funcionário',
-            placeholder: 'Digite seu email...',
-            icon: 'fa-at',
-            required: true,
-            disabled: false
-          },
-          wrappers: ['form-field']
-        }
-      ]
-    };
-
-    // const form = { name: '', id: guid(), fields: [] };
-    this.forms.add(form);
-    this.forms.setActive(form.id);
   }
 
   ngOnDestroy() {

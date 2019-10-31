@@ -9,6 +9,10 @@ body .ui-inputswitch.ui-inputswitch-checked .ui-inputswitch-slider {
   background-color: $secondary;
 }
 
+body .ui-corner-all {
+  border-radius: 3px !important;
+}
+
 body input {
   font-size: 14px;
   background: #fff;
@@ -42,4 +46,23 @@ body .ui-state-active {
   background-color: $secondary !important;
   border-color: $secondary !important;
   color: #ffffff;
+}
+
+p-confirmdialog {
+  .ui-dialog {
+    .ui-dialog-titlebar {
+      border: none;
+      background-color: #ffffff;
+      .ui-dialog-title {
+        color: $secondary;
+      }
+    }
+    .ui-dialog-content {
+      border: none;
+    }
+    .ui-dialog-footer {
+      border: none;
+      padding-bottom: 1rem;
+    }
+  }
 }

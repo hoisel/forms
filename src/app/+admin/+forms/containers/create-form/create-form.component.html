@@ -23,10 +23,9 @@
             </div>
             <div *ngIf="activeForm"
                  class="card flex-grow-1 w-100 p-4 m-2">
-
                 <editable>
                     <ng-template viewMode>
-                        <h5> {{formName.value || 'Formulário'}} <i class="fas fa-pen"></i></h5>
+                        <h5 class="form-name"> {{formName.value || 'Formulário'}} <i class="fas fa-pen"></i></h5>
                     </ng-template>
                     <ng-template editMode>
                         <input type="text"
@@ -123,9 +122,10 @@
 
                 <formly-form [fields]="activeForm.fields"
                              class="{{selectedMode}}"></formly-form>
-
+                <!-- <pre>
+                    {{activeForm | json}}
+                </pre> -->
             </div>
         </div>
     </div>
 </ng-container>
-<p-toast></p-toast>
