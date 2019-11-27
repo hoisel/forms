@@ -21,7 +21,7 @@ export class EmailField extends FieldType {
     TextField.create('label', {
       label: 'Label',
       placeholder: 'Label',
-      required: true
+      required: false
     }),
     TextField.create('tooltip', {
       label: 'Tooltip',

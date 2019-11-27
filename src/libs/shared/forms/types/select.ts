@@ -36,7 +36,7 @@ export class SelectField extends FieldType {
     TextField.create('label', {
       label: 'Label',
       placeholder: 'Label',
-      required: true
+      required: false
     }),
     TextField.create('placeholder', {
       label: 'Placeholder',

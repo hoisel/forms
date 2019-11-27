@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { ActiveState, EntityState, EntityStore, StoreConfig } from '@datorama/akita';
+import { ActiveState, EntityState, EntityStore, EntityUIStore, ID, StoreConfig } from '@datorama/akita';
+import { executeDelayed } from '@edocsforms/core';
 import {
   CalendarField,
   CheckboxField,
@@ -8,18 +9,21 @@ import {
   PasswordField,
   RadioField,
   SelectField,
-  SetorField,
   TextareaField,
   TextField,
   ToggleButtonField
 } from '@edocsforms/shared';
 import { FormlyFieldConfig } from '@ngx-formly/core';
+import { Observable, OperatorFunction } from 'rxjs';
+import { finalize } from 'rxjs/operators';
 
-import { Form } from './form.model';
+import { Form, FormUI } from './form.model';
 
 export interface FormsState extends EntityState<Form>, ActiveState {
   availableFields: FormlyFieldConfig[];
 }
+
+export interface FormUIState extends EntityState<FormUI> {}
 
 const createInitialState = () => {
   return {
@@ -69,94 +73,48 @@ const createInitialState = () => {
       CheckboxField.create('checkbox', {
         label: 'Checkbox',
         required: true
-      }),
-      SetorField.create('setor', {
-        label: 'Setor',
-        required: true
       })
     ]
   };
 };
 
+/**
+ *
+ */
+export type DelayedEntityActionOperator = <T>(id?: ID, delay?: number) => OperatorFunction<T, T>;
+
+/**
+ * Creates a ToggleLoading operator
+ */
+export const createToggleLoading = <S>(store: BaseStore<S>): DelayedEntityActionOperator => {
+  return <T>(id?: ID, delay: number = 0): OperatorFunction<T, T> => {
+    return (source: Observable<T>): Observable<T> => {
+      return source.pipe(
+        executeDelayed(() => store.setLoadingEntity(true, id), delay),
+        finalize(() => {
+          store.setLoadingEntity(false, id);
+        })
+      );
+    };
+  };
+};
+
+export class BaseStore<S> extends EntityStore<S> {
+  setLoadingEntity(isLoading: boolean, id?: ID): void {
+    this.ui.update(id, { isLoading });
+  }
+}
+
 @Injectable({ providedIn: 'root' })
 @StoreConfig({ name: 'forms' })
-export class FormsStore extends EntityStore<FormsState> {
+export class FormsStore extends BaseStore<FormsState> {
+  ui: EntityUIStore<FormUIState>;
+
+  /**
+   *
+   */
   constructor() {
     super(createInitialState());
-
-    this.set([
-      {
-        id: '2ca6ff4394',
-        name: 'Formulário Teste',
-        published: true,
-        fields: [
-          {
-            id: 'c5801c4b8a',
-            type: 'input',
-            key: 'texto',
-            templateOptions: {
-              icon: 'fa fa-font',
-              label: 'Nome',
-              required: true,
-              placeholder: 'Digite seu nome...',
-              disabled: false
-            },
-            wrappers: ['form-field'],
-            hooks: {},
-            modelOptions: {}
-          },
-          {
-            id: '97dcb443aa',
-            type: 'input',
-            key: 'email',
-            templateOptions: {
-              type: 'email',
-              label: 'Email do funcionário',
-              placeholder: 'Digite seu email...',
-              icon: 'fa-at',
-              required: true,
-              disabled: false
-            },
-            wrappers: ['form-field']
-          }
-        ]
-      },
-      {
-        id: '2ca6ff1111',
-        name: 'Fomulário 4x4x1',
-        published: false,
-        fields: [
-          {
-            id: 'c5801c4b8a',
-            type: 'input',
-            key: 'texto',
-            templateOptions: {
-              icon: 'fa fa-font',
-              label: 'Nome',
-              required: true,
-              placeholder: 'Digite seu nome...',
-              disabled: false
-            },
-            wrappers: ['form-field'],
-            hooks: {},
-            modelOptions: {}
-          },
-          {
-            id: '97dcb443aa',
-            type: 'input',
-            key: 'email',
-            templateOptions: {
-              type: 'email',
-              label: 'Email do funcionário',
-              placeholder: 'Digite seu email...',
-              icon: 'fa-at',
-              required: true,
-              disabled: false
-            },
-            wrappers: ['form-field']
-          }
-        ]
-      }
-    ]);
+    this.createUIStore().setInitialEntityState({ isLoading: false });
   }
 }

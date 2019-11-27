@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
+import { clone } from '@edocsforms/core';
 import {
   CalendarField,
   CheckboxField,
@@ -10,6 +11,7 @@ import {
   PasswordField,
   RadioField,
   SelectField,
+  SetorField,
   TextareaField,
   TextField,
   ToggleButtonField
@@ -37,7 +39,8 @@ export class EditFieldComponent implements OnInit {
    *
    */
   ngOnInit() {
-    this.model = this.config.data;
+    // clone avoid mutate original object and commit only whe submit button is clicked
+    this.model = clone(this.config.data);
     this.fields = [
       {
         ...TextField.create('key', {
@@ -89,6 +92,8 @@ export class EditFieldComponent implements OnInit {
       return SelectField.getEditForm();
     } else if (type === 'toggle-button') {
       return ToggleButtonField.getEditForm();
+    } else if (type === 'setor') {
+      return SetorField.getEditForm();
     }
   };
 }

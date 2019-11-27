@@ -36,35 +36,38 @@
             <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's
                 content.</p>
             <hr>
-            <div class="actions">
-                <a *ngIf="!form.published"
-                   class="card-link float-right ml-3"
-                   (click)="confirmDeleteForm(form)"
-                   pTooltip="Excluir"
-                   tooltipPosition="bottom">
-                    <i class="fas fa-trash"></i>
-                </a>
-                <a *ngIf="!form.published"
-                   (click)="goToForm(form.id)"
-                   class="card-link float-right ml-3"
-                   pTooltip="Editar"
-                   tooltipPosition="bottom">
-                    <i class="fas fa-pen"></i>
-                </a>
-                <a (click)="cloneForm(form.id)"
-                   class="card-link float-right ml-3"
-                   pTooltip="Duplicar"
-                   tooltipPosition="bottom">
-                    <i class="fas fa-clone"></i>
-                </a>
-                <a *ngIf="!form.published"
-                   (click)="confirmPublishForm(form)"
-                   class="card-link float-right ml-3"
-                   pTooltip="Publicar"
-                   tooltipPosition="bottom">
-                    <i class="fas fa-cloud-upload-alt"></i>
-                </a>
-            </div>
+            <spinner *ngIf="isLoading(form.id) | async; else actions"> </spinner>
+            <ng-template #actions>
+                <div class="actions">
+                    <a *ngIf="!form.published"
+                       class="card-link float-right ml-3"
+                       (click)="confirmDeleteForm(form)"
+                       pTooltip="Excluir"
+                       tooltipPosition="bottom">
+                        <i class="fas fa-trash"></i>
+                    </a>
+                    <a *ngIf="!form.published"
+                       (click)="goToForm(form.id)"
+                       class="card-link float-right ml-3"
+                       pTooltip="Editar"
+                       tooltipPosition="bottom">
+                        <i class="fas fa-pen"></i>
+                    </a>
+                    <a (click)="cloneForm(form.id)"
+                       class="card-link float-right ml-3"
+                       pTooltip="Duplicar"
+                       tooltipPosition="bottom">
+                        <i class="fas fa-clone"></i>
+                    </a>
+                    <a *ngIf="!form.published"
+                       (click)="confirmPublishForm(form)"
+                       class="card-link float-right ml-3"
+                       pTooltip="Publicar"
+                       tooltipPosition="bottom">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                    </a>
+                </div>
+            </ng-template>
         </div>
     </div>
 </div>

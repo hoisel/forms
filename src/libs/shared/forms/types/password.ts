@@ -24,7 +24,7 @@ import { TextField } from './text';
     />
   `
 })
-// tslint:disable-next-line:component-class-suff
+// tslint:disable-next-line:component-class-suffix
 export class PasswordField extends FieldType {
   public static create(key: string, templateOptions?: PasswordTemplateOptions, options?: any): FormlyFieldConfig {
     const defaults = {
@@ -36,13 +36,13 @@ export class PasswordField extends FieldType {
       tooltip: '',
       icon: 'fa fa-lock',
 
-      // primebg
+      // primeng
       weakLabel: 'Fraco',
       mediumLabel: 'Médio',
       strongLabel: 'Forte',
       promptLabel: 'Digite sua senha',
       feedback: true,
-      showPassword: true
+      showPassword: false
     };
 
     return createField('password', key, { ...defaults, ...templateOptions }, options);
@@ -55,7 +55,7 @@ export class PasswordField extends FieldType {
     TextField.create('label', {
       label: 'Label',
       placeholder: 'Label',
-      required: true
+      required: false
     }),
     TextField.create('placeholder', {
       label: 'Placeholder',

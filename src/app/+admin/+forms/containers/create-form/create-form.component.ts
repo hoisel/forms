@@ -42,8 +42,8 @@ export class CreateFormComponent implements OnInit, OnDestroy {
    *
    */
   ngOnInit() {
-    this.availableFields$ = this.query.availableFields$;
-    this.activeForm$ = this.query.activeForm$;
+    this.availableFields$ = this.query.selectAvailableFields();
+    this.activeForm$ = this.query.selectActiveForm();
 
     this.activeForm$.pipe(takeUntil(this.destroyed$$)).subscribe(form => {
       this.formName.setValue(form.name);
@@ -74,7 +74,7 @@ export class CreateFormComponent implements OnInit, OnDestroy {
    */
   drop() {
     if (this.dragged) {
-      this.forms.addField(this.query.getActiveId(), this.dragged);
+      this.forms.addField(this.query.getActiveId(), this.dragged).subscribe();
       this.dragged = null;
     }
   }
@@ -91,14 +91,14 @@ export class CreateFormComponent implements OnInit, OnDestroy {
    *
    */
   remove(field: FormlyFieldConfig) {
-    this.forms.removeField(this.query.getActiveId(), field);
+    this.forms.removeField(this.query.getActiveId(), field).subscribe();
   }
 
   /**
    *
    */
   removeAll() {
-    this.forms.removeAllFields(this.query.getActiveId());
+    this.forms.removeAllFields(this.query.getActiveId()).subscribe();
   }
 
   /**
@@ -117,9 +117,10 @@ export class CreateFormComponent implements OnInit, OnDestroy {
 
     ref.onClose.subscribe((edited: FormlyFieldConfig) => {
       if (edited) {
-        this.forms.updateField(this.query.getActiveId(), edited);
-        this.messageService.add({ severity: 'info', summary: label, detail: 'Campo atualizado' });
-        this.cd.detectChanges();
+        this.forms.updateField(this.query.getActiveId(), edited).subscribe(() => {
+          this.messageService.add({ severity: 'info', summary: label, detail: 'Campo atualizado' });
+          this.cd.detectChanges();
+        });
       }
     });
   }
@@ -135,6 +136,6 @@ export class CreateFormComponent implements OnInit, OnDestroy {
    *
    */
   clearForm = (form: Form) => {
-    this.forms.clearForm(form.id);
+    this.forms.clear(form.id).subscribe();
   };
 }

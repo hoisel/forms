@@ -3,6 +3,7 @@ import { ConfigOption } from '@ngx-formly/core';
 import {
   CalendarField,
   CheckboxField,
+  IconField,
   InputField,
   InputSwitchField,
   PasswordField,
@@ -13,6 +14,34 @@ import {
   ToggleButtonField
 } from './types';
 import { FormlyWrapperFormField } from './wrappers';
+
+export const required = (err, field) => {
+  return `Obrigatório`;
+};
+
+export const minlength = (err, field) => {
+  return `No mínimo ${field.templateOptions.minLength} caracteres`;
+};
+
+export const maxlength = (err, field) => {
+  return `No máximo ${field.templateOptions.maxLength} caracteres`;
+};
+
+export const min = (err, field) => {
+  return `Valor mínimo ${field.templateOptions.min}`;
+};
+
+export const max = (err, field) => {
+  return `Valor máximo ${field.templateOptions.max}`;
+};
+
+export const ValidationMessages = [
+  { name: 'required', message: 'Obrigatório' },
+  { name: 'minlength', message: minlength },
+  { name: 'maxlength', message: maxlength },
+  { name: 'min', message: min },
+  { name: 'max', message: max }
+];
 
 export const FormTypes = [
   // types
@@ -26,12 +55,14 @@ export const FormTypes = [
   ToggleButtonField,
   PasswordField,
   SetorField,
+  IconField,
   // wrappers
   FormlyWrapperFormField
 ];
 
 export const FormsConfig: ConfigOption = {
   wrappers: [{ name: 'form-field', component: FormlyWrapperFormField }],
+  validationMessages: ValidationMessages,
   types: [
     {
       name: 'input',
@@ -76,6 +107,11 @@ export const FormsConfig: ConfigOption = {
     {
       name: 'select',
       component: SelectField,
+      wrappers: ['form-field']
+    },
+    {
+      name: 'icon',
+      component: IconField,
       wrappers: ['form-field']
     },
     {

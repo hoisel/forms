@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { FieldType, FormlyFieldConfig } from '@ngx-formly/core';
 
-import { createField, EmailTemplateOptions } from '../helpers';
+import { createField, SetorTemplateOptions } from '../helpers';
 import { InputSwitchField } from './input-switch';
 import { TextField } from './text';
 
@@ -579,14 +579,23 @@ const setores = [
 ];
 
 @Component({
-  selector: 'formly-field-primeng-password',
+  selector: 'formly-field-primeng-setor',
   template: `
-    SETOR
+    <p-dropdown
+      [class.ng-dirty]="showError"
+      [placeholder]="to.placeholder"
+      [options]="to.options"
+      [formControl]="formControl"
+      [formlyAttributes]="field"
+      [showClear]="!to.required"
+      (onChange)="to.change && to.change(field, $event)"
+    >
+    </p-dropdown>
   `
 })
 // tslint:disable-next-line:component-class-suffix
 export class SetorField extends FieldType {
-  static create(key: string, templateOptions?: EmailTemplateOptions, options?: any): FormlyFieldConfig {
+  static create(key: string, templateOptions?: SetorTemplateOptions, options?: any): FormlyFieldConfig {
     const defaults = {
       type: 'setor',
       label: 'Setor',
@@ -595,7 +604,11 @@ export class SetorField extends FieldType {
       tooltip: ''
     };
 
-    return createField('input', key, { ...defaults, ...templateOptions }, options);
+    if (templateOptions.options) {
+      templateOptions.options = [{ value: null, label: 'Selecione...' }, ...templateOptions.options];
+    }
+
+    return createField('setor', key, { ...defaults, ...templateOptions }, options);
   }
 
   static getEditForm = () => [

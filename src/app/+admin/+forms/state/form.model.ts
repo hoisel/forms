@@ -8,6 +8,28 @@ export interface Form {
   fields: FormlyFieldConfig[];
 }
 
+export interface Setor {
+  guid: ID;
+  nome: string;
+  sigla: string;
+  nomeCurto: string;
+  tipoUnidade: {
+    id: number;
+    descricao: string;
+  };
+  unidadePai: {
+    guid: string;
+    nome: string;
+    sigla: string;
+    nomeCurto: string;
+  };
+}
+
+export interface FormUI {
+  id: ID;
+  isLoading: boolean;
+}
+
 /**
  * A factory function that creates Forms
  */

@@ -33,7 +33,7 @@ export class CheckboxField extends FieldType {
     TextField.create('label', {
       label: 'Label',
       placeholder: 'Label',
-      required: true
+      required: false
     }),
     InputSwitchField.create('required', {
       label: 'Obrigatório?',

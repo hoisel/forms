@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ID } from '@datorama/akita';
+import { memo } from 'helpful-decorators';
 import { ConfirmationService } from 'primeng/api';
 import { Observable, Subject } from 'rxjs';
 
@@ -27,7 +28,9 @@ export class FormsListComponent implements OnInit, OnDestroy {
   /**
    *
    */
-  ngOnInit() {}
+  ngOnInit() {
+    this.forms.load().subscribe();
+  }
 
   /**
    *
@@ -35,6 +38,11 @@ export class FormsListComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.destroyed$$.next();
     this.destroyed$$.complete();
+  }
+
+  @memo()
+  isLoading(id: ID) {
+    return this.query.selectLoadingEntity(id);
   }
 
   /**
@@ -49,7 +57,7 @@ export class FormsListComponent implements OnInit, OnDestroy {
    *
    */
   cloneForm = (id: ID) => {
-    this.forms.cloneForm(id);
+    this.forms.clone(id).subscribe();
   };
 
   /**
@@ -57,9 +65,9 @@ export class FormsListComponent implements OnInit, OnDestroy {
    */
   confirmPublishForm = (form: Form) => {
     this.confirmationService.confirm({
-      message: `Deseja mesmo excluir o formulário ${form.name}? Essa ação é irrevesível e bloqueará a edição do formulário`,
+      message: `Deseja mesmo publicar o formulário ${form.name}? Essa ação é irrevesível e bloqueará a edição do formulário`,
       accept: () => {
-        this.publishForm(form.id);
+        this.forms.publish(form.id).subscribe();
       }
     });
   };
@@ -71,22 +79,8 @@ export class FormsListComponent implements OnInit, OnDestroy {
     this.confirmationService.confirm({
       message: `Deseja mesmo excluir o formulário ${form.name}?`,
       accept: () => {
-        this.deleteForm(form.id);
+        this.forms.delete(form.id).subscribe();
       }
     });
-  };
-
-  /**
-   *
-   */
-  private deleteForm = (id: ID) => {
-    this.forms.deleteForm(id);
-  };
-
-  /**
-   *
-   */
-  private publishForm = (id: ID) => {
-    this.forms.publishForm(id);
   };
 }

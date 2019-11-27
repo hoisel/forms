@@ -33,7 +33,7 @@ export class CalendarField extends FieldType {
     const year = today.getFullYear();
 
     const defaults = {
-      dateFormat: 'dd/mm/yyyy',
+      dateFormat: 'dd/mm/yy',
       yearRange: `${year}:${year + 3}`,
       minDate: today,
       maxDate: new Date(today.getFullYear() + 3, today.getMonth(), today.getDate()),
@@ -55,7 +55,7 @@ export class CalendarField extends FieldType {
     TextField.create('label', {
       label: 'Label',
       placeholder: 'Label',
-      required: true
+      required: false
     }),
     TextField.create('placeholder', {
       label: 'Placeholder',
